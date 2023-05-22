@@ -1,4 +1,5 @@
-<?php
+
+<?php session_start();
 include_once "query.php";
 
 ?>
@@ -16,6 +17,7 @@ include_once "query.php";
 </head>
 
 <body>
+    
     <?php include "templates/header.php" ?>
     <?php foreach ($users as $user) : ?>
         <article>

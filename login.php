@@ -1,26 +1,27 @@
 <?php session_start();
-    require_once 'db.php';
-    require_once "query.php";
-  
-    // var_dump($users);
+require_once 'db.php';
+require_once "query.php";
+
+
+if(isset($_SESSION['LOGGED_USER'])){
+    header("Location:index.php");
+}
+
+// var_dump($users);
 if (isset($_POST['username']) && isset($_POST['password'])) {
     foreach ($users as $user) {
         if (
-            $user['nom_utilisateur'] === $_POST['username'] && $user['password'] ===
-            $_POST['password']
+            $user['nom_utilisateur'] === $_POST['username'] &&
+            password_verify($_POST['password'], $user['password'])
         ) {
             $_SESSION['LOGGED_USER'] = $user['nom_utilisateur'];
             header("Location:index.php");
-        } else {
-            $errorMessage = sprintf(
-                "Les informations envoyées ne permettent pas de vous identifier :
-   (%s/%s)",
-                $_POST['username'],
-                $_POST['password']
-            );
+            exit(); 
         }
     }
+    $errorMessage = "Les informations envoyées ne permettent pas de vous identifier.";
 }
+
 
 ?>
 
