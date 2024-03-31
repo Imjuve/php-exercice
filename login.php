@@ -2,24 +2,16 @@
     require_once 'db.php';
     require_once "query.php";
   
-    // var_dump($users);
 if (isset($_POST['username']) && isset($_POST['password'])) {
     foreach ($users as $user) {
-        if (
-            $user['nom_utilisateur'] === $_POST['username'] && $user['password'] ===
-            $_POST['password']
-        ) {
+        if ($user['nom_utilisateur'] === $_POST['username'] && password_verify($_POST['password'], $user['password'])) {
             $_SESSION['LOGGED_USER'] = $user['nom_utilisateur'];
-            header("Location:index.php");
-        } else {
-            $errorMessage = sprintf(
-                "Les informations envoyées ne permettent pas de vous identifier :
-   (%s/%s)",
-                $_POST['username'],
-                $_POST['password']
-            );
+            header("Location: index.php");
+            exit;
         }
     }
+
+    $errorMessage = "Les informations d'identification fournies ne sont pas valides.";
 }
 
 ?>
@@ -41,6 +33,9 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
     <main>
         <section class="login">
             <h2>Connectez vous</h2>
+             <?php if(isset($errorMessage)): ?>
+                <p><?php echo $errorMessage; ?></p>
+            <?php endif; ?>
             <form action="" method="POST">
                 <label for="username">Votre nom d'utilisateur : </label>
                 <input id="username" type="text" name="username">
